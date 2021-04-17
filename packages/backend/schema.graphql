@@ -1,0 +1,49 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type TaskModel {
+  id: ID!
+  title: String!
+  deadline: DateTime!
+  assign: UserModel!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type UserModel {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  tasks: [TaskModel!]!
+}
+
+type Query {
+  users: [UserModel!]!
+  user(id: ID!): UserModel!
+  tasks: [TaskModel!]!
+  task(id: ID!): TaskModel!
+}
+
+type Mutation {
+  addUser(user: AddUserInput!): UserModel!
+  removeUser(id: ID!): UserModel
+  addTask(task: AddTaskInput!): TaskModel!
+  removeTask(id: ID!): TaskModel
+}
+
+input AddUserInput {
+  firstName: String!
+  lastName: String!
+}
+
+input AddTaskInput {
+  title: String!
+  deadline: DateTime!
+  userId: ID!
+}
