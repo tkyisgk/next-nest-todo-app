@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 
 import Head from 'next/head';
 import { InferGetServerSidePropsType } from "next";
@@ -8,6 +8,9 @@ import { Query, Document } from '@/graphql/generated'
 import { css } from '@emotion/core';
 
 import { UserList } from '@/components/organisms/UserList'
+import { Modal } from '@/components/templates/Modal'
+import { AddUser } from '@/components/organisms/AddUser'
+import { Button } from '@/components/atoms/Button'
 
 const container = css({
   display: 'flex',
@@ -32,6 +35,11 @@ export const getServerSideProps = async () => {
 };
 
 export default memo<InferGetServerSidePropsType<typeof getServerSideProps>>(({ initialData }) => {
+  const [isAddUserModal, setAddUserModal] = useState(false);
+
+  const handleAddUserClick = (e: React.MouseEvent) => {
+    setAddUserModal(!isAddUserModal)
+  }
  
   return (
     <div>
@@ -41,10 +49,15 @@ export default memo<InferGetServerSidePropsType<typeof getServerSideProps>>(({ i
       <div css={container}>
         <aside css={aside}>
           <UserList userData={initialData.users} />
-          <button type="button">ユーザー追加</button>
+          <Button onClick={handleAddUserClick}>ユーザー追加</Button>
         </aside>
         <main>あ</main>
       </div>
+      {isAddUserModal &&
+        <Modal>
+          <AddUser />
+        </Modal>
+      }
     </div>
   )
 })
