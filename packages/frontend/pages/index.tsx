@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { InferGetServerSidePropsType } from "next";
 
 import { client } from '@/graphql/client';
-import { Query, Document } from '@/graphql/generated'
+import { Query, UsersDocument } from '@/graphql/generated'
 import { css } from '@emotion/core';
 
 import { UserList } from '@/components/organisms/UserList'
@@ -29,7 +29,7 @@ const aside = css({
 
 export const getServerSideProps = async () => {
   const { data } = await client.query<Query>({
-    query: Document,
+    query: UsersDocument,
   });
   return { props: { initialData: data } };
 };

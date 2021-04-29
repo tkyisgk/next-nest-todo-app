@@ -1,0 +1,9 @@
+mutation addUser($user: AddUserInput!) {
+  addUser(user: $user) {
+    id
+    firstName
+    tasks {
+      id
+    }
+	}
+}
