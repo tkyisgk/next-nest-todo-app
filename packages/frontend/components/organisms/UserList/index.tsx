@@ -11,7 +11,6 @@ type Props = {
 };
 
 export const UserList = memo<Props>(({ userData }) => {
-  console.log(userData)
 
   return(
     <ul>

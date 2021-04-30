@@ -3,8 +3,8 @@
   "host": "localhost",
   "port": 3306,
   "username": "root",
-  "password": "pw",
-  "database": "next-nest-todo-app",
+  "password": "root",
+  "database": "next_nest_todo_app",
   "entities": ["./dist/models/*.js"],
   "synchronize": true
 }
