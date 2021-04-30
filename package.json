@@ -7,7 +7,9 @@
     "node": "12"
   },
   "scripts": {
+    "prepare": "husky install",
     "precommit": "lint-staged",
+    "commitmsg": "commitlint -e HUSKY_GIT_PARAMS",
     "lint": "eslint .",
     "lint:backend": "eslint ./packages/backend",
     "lint:frontend": "eslint ./packages/frontend"
@@ -16,11 +18,6 @@
     "packages/**/*.{ts,tsx}": [
       "eslint . --fix"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
