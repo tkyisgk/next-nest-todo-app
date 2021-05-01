@@ -5,11 +5,15 @@ import { useAddUserMutation } from '@/graphql/generated';
 import { Button } from '@/components/atoms/Button';
 
 type InputContents = {
-  lastName: string,
+  lastName: string
   firstName: string
 }
 
-export const AddUser: React.FC = (({ children }) => {
+type Props = {
+  onAddUser: () => void
+}
+
+export const AddUser: React.FC<Props> = (({ children, onAddUser }) => {
   const [values, setValues] = useState<InputContents>({
     lastName: '',
     firstName: '',
@@ -43,25 +47,60 @@ export const AddUser: React.FC = (({ children }) => {
       },
     });
 
-    alert('登録しました。')
+    onAddUser();
   }
 
   return(
     <>
-      <div>ユーザー登録</div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>氏</label>
-          <input type="text" name="lastName" onChange={handleInputChange} />
+      <h3 css={head}>ユーザー登録</h3>
+      <form css={form} onSubmit={handleSubmit}>
+        <div css={formContent}>
+          <label htmlFor="lastName">氏</label>
+          <input id="lastName" type="text" name="lastName" onChange={handleInputChange} />
         </div>
-        <div>
-          <label>名</label>
-          <input type="text" name="firstName" onChange={handleInputChange} />
+        <div css={formContent}>
+          <label htmlFor="firstName">名</label>
+          <input id="firstName" type="text" name="firstName" onChange={handleInputChange} />
         </div>
-        <div>
+        <div css={btnWrap}>
           <Button type="submit">登録する</Button>
         </div>
       </form>
     </>
   )
+})
+
+const head = css({
+  fontSize: '20px',
+  fontWeight: 700,
+  textAlign: 'center'
+})
+
+const form = css({
+  marginTop: '30px'
+})
+
+const formContent = css({
+  '&:not(:first-of-type)': {
+    marginTop: '20px'
+  },
+  '& > label': {
+    display: 'inline-block',
+    width: '30px'
+  },
+  '& > input': {
+    padding: '8px 14px',
+    width: '200px',
+    border: '1px solid #ccc',
+    borderRadius: '0px',
+    '&:focus-visible': {
+      borderRadius: '0px',
+      outline: 'none'
+    }
+  }
+})
+
+const btnWrap = css({
+  margin: '20px auto 0',
+  width: '100px',
 })

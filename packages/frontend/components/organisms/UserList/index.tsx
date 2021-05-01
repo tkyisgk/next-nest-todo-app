@@ -1,4 +1,5 @@
-import React, { memo, useState } from 'react';
+import React from 'react';
+import { css } from '@emotion/core';
 
 import { UserBox } from '@/components/molecules/UserBox'
 
@@ -10,13 +11,31 @@ type Props = {
   }[]
 };
 
-export const UserList = memo<Props>(({ userData }) => {
+export const UserList: React.FC<Props> = (({ userData }) => {
 
   return(
-    <ul>
+    <ul css={list}>
       {userData.map((user, index) =>
-        <li key={index}><UserBox userData={user} /></li>
+        <li css={item} key={index}><UserBox userData={user} /></li>
       )}
     </ul>
   )
+})
+
+const list = css({
+  border: '1px solid #ccc'
+})
+const item = css({
+  position: 'relative',
+
+  // '&::after': {
+  //   content: '',
+  //   position: 'absolute',
+  //   bottom: 0,
+  //   left: '50%',
+  //   transform: 'translate(-50%, -50%)',
+  //   width: '80%',
+  //   height: '1px',
+  //   backgroundColor: '#ccc'
+  // }
 })

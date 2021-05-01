@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { InferGetServerSidePropsType } from "next";
 
 import { client } from '@/graphql/client';
-import { Query, UsersDocument } from '@/graphql/generated'
+import { Query, UsersDocument, useUsersQuery } from '@/graphql/generated'
 import { css } from '@emotion/core';
 
 import { UserList } from '@/components/organisms/UserList'
@@ -24,7 +24,6 @@ const container = css({
 
 const aside = css({
   width: '30%',
-  backgroundColor: '#eee'
 })
 
 export const getServerSideProps = async () => {
@@ -36,10 +35,12 @@ export const getServerSideProps = async () => {
 
 export default memo<InferGetServerSidePropsType<typeof getServerSideProps>>(({ initialData }) => {
   const [isAddUserModal, setAddUserModal] = useState(false);
+  const { data, refetch } = useUsersQuery();
+  const userData = data ? data.users : initialData.users;
 
-  const handleAddUserClick = (e: React.MouseEvent) => {
-    setAddUserModal(!isAddUserModal)
-  }
+  const handleAddUserClick = () => setAddUserModal(!isAddUserModal)
+  const handleModalClose = () => setAddUserModal(false)
+  const handleAddUser = () => refetch().then(() => setAddUserModal(!isAddUserModal))
  
   return (
     <div>
@@ -48,14 +49,14 @@ export default memo<InferGetServerSidePropsType<typeof getServerSideProps>>(({ i
       </Head>
       <div css={container}>
         <aside css={aside}>
-          <UserList userData={initialData.users} />
+          <UserList userData={userData} />
           <Button onClick={handleAddUserClick}>ユーザー追加</Button>
         </aside>
         <main>あ</main>
       </div>
       {isAddUserModal &&
-        <Modal>
-          <AddUser />
+        <Modal onClose={handleModalClose}>
+          <AddUser onAddUser={handleAddUser} />
         </Modal>
       }
     </div>
