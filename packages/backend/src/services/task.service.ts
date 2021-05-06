@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { TaskModel } from '@/models/task.model';
-import { AddTaskInput } from '@/dto/task.dto';
+import { TaskModel } from "@/models/task.model";
+import { AddTaskInput } from "@/dto/task.dto";
 
-import { UserService } from '@/services/user.service';
+import { UserService } from "@/services/user.service";
 
 @Injectable()
 export class TaskService {
@@ -17,9 +17,9 @@ export class TaskService {
 
   async findAll(): Promise<TaskModel[]> {
     return this.taskRepository.find({
-      relations: ['user'],
+      relations: ["user"],
       order: {
-        id: 'DESC',
+        id: "DESC",
       },
     });
   }

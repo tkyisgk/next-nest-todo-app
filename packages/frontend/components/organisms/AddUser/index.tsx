@@ -1,40 +1,40 @@
-import React, { useState } from 'react';
-import { css } from '@emotion/core';
+import React, { useState } from "react";
+import { css } from "@emotion/core";
 
-import { useAddUserMutation } from '@/graphql/generated';
-import { Button } from '@/components/atoms/Button';
+import { useAddUserMutation } from "@/graphql/generated";
+import { Button } from "@/components/atoms/Button";
 
 type InputContents = {
-  lastName: string
-  firstName: string
-}
+  lastName: string;
+  firstName: string;
+};
 
 type Props = {
-  onAddUser: () => void
-}
+  onAddUser: () => void;
+};
 
-export const AddUser: React.FC<Props> = (({ children, onAddUser }) => {
+export const AddUser: React.FC<Props> = ({ onAddUser }) => {
   const [values, setValues] = useState<InputContents>({
-    lastName: '',
-    firstName: '',
+    lastName: "",
+    firstName: "",
   });
   const [addUserMutation] = useAddUserMutation();
 
   const handleInputChange = (event: React.BaseSyntheticEvent) => {
     setValues({
       ...values,
-      [event.currentTarget.name]: event.currentTarget.value
-    })
-  }
+      [event.currentTarget.name]: event.currentTarget.value,
+    });
+  };
 
   const handleSubmit = async (event: React.BaseSyntheticEvent) => {
     event.preventDefault();
 
-    let key: keyof InputContents
+    let key: keyof InputContents;
     for (key in values) {
       if (!values[key]) {
-        alert('入力内容を確認してください。')
-        return
+        alert("入力内容を確認してください。");
+        return;
       }
     }
 
@@ -43,14 +43,14 @@ export const AddUser: React.FC<Props> = (({ children, onAddUser }) => {
         user: {
           firstName: values.firstName,
           lastName: values.lastName,
-        }
+        },
       },
     });
 
     onAddUser();
-  }
+  };
 
-  return(
+  return (
     <>
       <h3 css={head}>ユーザー登録</h3>
       <form css={form} onSubmit={handleSubmit}>
@@ -67,40 +67,40 @@ export const AddUser: React.FC<Props> = (({ children, onAddUser }) => {
         </div>
       </form>
     </>
-  )
-})
+  );
+};
 
 const head = css({
-  fontSize: '20px',
+  fontSize: "20px",
   fontWeight: 700,
-  textAlign: 'center'
-})
+  textAlign: "center",
+});
 
 const form = css({
-  marginTop: '30px'
-})
+  marginTop: "30px",
+});
 
 const formContent = css({
-  '&:not(:first-of-type)': {
-    marginTop: '20px'
+  "&:not(:first-of-type)": {
+    marginTop: "20px",
   },
-  '& > label': {
-    display: 'inline-block',
-    width: '30px'
+  "& > label": {
+    display: "inline-block",
+    width: "30px",
   },
-  '& > input': {
-    padding: '8px 14px',
-    width: '200px',
-    border: '1px solid #ccc',
-    borderRadius: '0px',
-    '&:focus-visible': {
-      borderRadius: '0px',
-      outline: 'none'
-    }
-  }
-})
+  "& > input": {
+    padding: "8px 14px",
+    width: "200px",
+    border: "1px solid #ccc",
+    borderRadius: "0px",
+    "&:focus-visible": {
+      borderRadius: "0px",
+      outline: "none",
+    },
+  },
+});
 
 const btnWrap = css({
-  margin: '20px auto 0',
-  width: '100px',
-})
+  margin: "20px auto 0",
+  width: "100px",
+});

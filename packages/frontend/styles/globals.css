@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   padding: 0;
@@ -14,11 +20,9 @@ a {
 button {
   margin: 0;
   padding: 0;
+  font: inherit;
   border: none;
+  background: transparent;
   outline: none;
   cursor: pointer;
-}
-
-* {
-  box-sizing: border-box;
 }

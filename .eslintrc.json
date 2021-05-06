@@ -2,12 +2,13 @@
   "ignorePatterns": ["node_modules", ".next", "dist"],
   "env": {
     "browser": true,
-    "es2021": true
+    "node": true
   },
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -22,6 +23,14 @@
     "react/display-name": ["off"],
     "react/prop-types": ["error", { "skipUndeclared": true }],
     "@typescript-eslint/explicit-function-return-type": ["off"],
-    "@typescript-eslint/explicit-module-boundary-types": ["off"]
+    "@typescript-eslint/explicit-module-boundary-types": ["off"],
+    "prettier/prettier": [
+      "error",
+      {
+        "semi": true,
+        "printWidth": 120,
+        "trailingComma": "all"
+      }
+    ]
   }
 }

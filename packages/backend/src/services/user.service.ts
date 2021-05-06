@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { UserModel } from '@/models/user.model';
-import { AddUserInput } from '@/dto/user.dto';
+import { UserModel } from "@/models/user.model";
+import { AddUserInput } from "@/dto/user.dto";
 
 @Injectable()
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
   async findAll(): Promise<UserModel[]> {
     return this.usersRepository.find({
       order: {
-        id: 'DESC',
+        id: "DESC",
       },
     });
   }

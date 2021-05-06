@@ -1,14 +1,14 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { GraphQLModule } from '@nestjs/graphql';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { GraphQLModule } from "@nestjs/graphql";
 
-import { UserModule } from '@/modules/user.module';
-import { TaskModule } from '@/modules/task.module';
+import { UserModule } from "@/modules/user.module";
+import { TaskModule } from "@/modules/task.module";
 
 @Module({
   imports: [
     GraphQLModule.forRoot({
-      autoSchemaFile: 'schema.graphql',
+      autoSchemaFile: "schema.graphql",
     }),
     TypeOrmModule.forRoot({}),
     UserModule,

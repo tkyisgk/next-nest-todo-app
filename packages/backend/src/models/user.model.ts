@@ -1,10 +1,10 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 
-import { TaskModel } from '@/models/task.model';
+import { TaskModel } from "@/models/task.model";
 
 @ObjectType()
-@Entity('user')
+@Entity("user")
 export class UserModel {
   @Field(() => ID)
   @PrimaryGeneratedColumn()

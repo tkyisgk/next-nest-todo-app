@@ -1,17 +1,10 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
-import { UserModel } from '@/models/user.model';
+import { UserModel } from "@/models/user.model";
 
 @ObjectType()
-@Entity('task')
+@Entity("task")
 export class TaskModel {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
@@ -22,7 +15,7 @@ export class TaskModel {
   title: string;
 
   @Field()
-  @Column('date', { nullable: true })
+  @Column("date", { nullable: true })
   deadline: Date;
 
   @Field(() => UserModel, { defaultValue: {} })

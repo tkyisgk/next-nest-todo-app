@@ -1,10 +1,10 @@
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -17,16 +17,15 @@ export type Scalars = {
 };
 
 export type AddTaskInput = {
-  title: Scalars['String'];
-  deadline: Scalars['DateTime'];
-  userId: Scalars['ID'];
+  title: Scalars["String"];
+  deadline: Scalars["DateTime"];
+  userId: Scalars["ID"];
 };
 
 export type AddUserInput = {
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
+  firstName: Scalars["String"];
+  lastName: Scalars["String"];
 };
-
 
 export type Mutation = {
   addUser: UserModel;
@@ -35,24 +34,20 @@ export type Mutation = {
   removeTask?: Maybe<TaskModel>;
 };
 
-
 export type MutationAddUserArgs = {
   user: AddUserInput;
 };
 
-
 export type MutationRemoveUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
-
 
 export type MutationAddTaskArgs = {
   task: AddTaskInput;
 };
 
-
 export type MutationRemoveTaskArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
 export type Query = {
@@ -62,29 +57,27 @@ export type Query = {
   task: TaskModel;
 };
 
-
 export type QueryUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
-
 export type QueryTaskArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
 export type TaskModel = {
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  deadline: Scalars['DateTime'];
+  id: Scalars["ID"];
+  title: Scalars["String"];
+  deadline: Scalars["DateTime"];
   assign: UserModel;
-  createdAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
+  createdAt: Scalars["DateTime"];
+  updatedAt: Scalars["DateTime"];
 };
 
 export type UserModel = {
-  id: Scalars['ID'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
+  id: Scalars["ID"];
+  firstName: Scalars["String"];
+  lastName: Scalars["String"];
   tasks: Array<TaskModel>;
 };
 
@@ -92,51 +85,46 @@ export type AddTaskMutationVariables = Exact<{
   task: AddTaskInput;
 }>;
 
-
-export type AddTaskMutation = { addTask: (
-    Pick<TaskModel, 'id' | 'title' | 'deadline' | 'createdAt' | 'updatedAt'>
-    & { assign: Pick<UserModel, 'id' | 'lastName' | 'firstName'> }
-  ) };
+export type AddTaskMutation = {
+  addTask: Pick<TaskModel, "id" | "title" | "deadline" | "createdAt" | "updatedAt"> & {
+    assign: Pick<UserModel, "id" | "lastName" | "firstName">;
+  };
+};
 
 export type RemoveTaskMutationVariables = Exact<{
-  taskId: Scalars['ID'];
+  taskId: Scalars["ID"];
 }>;
 
-
-export type RemoveTaskMutation = { removeTask?: Maybe<Pick<TaskModel, 'id' | 'title'>> };
+export type RemoveTaskMutation = { removeTask?: Maybe<Pick<TaskModel, "id" | "title">> };
 
 export type AddUserMutationVariables = Exact<{
   user: AddUserInput;
 }>;
 
+export type AddUserMutation = {
+  addUser: Pick<UserModel, "id" | "firstName"> & { tasks: Array<Pick<TaskModel, "id">> };
+};
 
-export type AddUserMutation = { addUser: (
-    Pick<UserModel, 'id' | 'firstName'>
-    & { tasks: Array<Pick<TaskModel, 'id'>> }
-  ) };
+export type UsersQueryVariables = Exact<{ [key: string]: never }>;
 
-export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UsersQuery = { users: Array<Pick<UserModel, 'id' | 'firstName' | 'lastName'>> };
-
+export type UsersQuery = { users: Array<Pick<UserModel, "id" | "firstName" | "lastName">> };
 
 export const AddTaskDocument = gql`
-    mutation addTask($task: AddTaskInput!) {
-  addTask(task: $task) {
-    id
-    title
-    deadline
-    assign {
+  mutation addTask($task: AddTaskInput!) {
+    addTask(task: $task) {
       id
-      lastName
-      firstName
+      title
+      deadline
+      assign {
+        id
+        lastName
+        firstName
+      }
+      createdAt
+      updatedAt
     }
-    createdAt
-    updatedAt
   }
-}
-    `;
+`;
 export type AddTaskMutationFn = Apollo.MutationFunction<AddTaskMutation, AddTaskMutationVariables>;
 
 /**
@@ -156,21 +144,23 @@ export type AddTaskMutationFn = Apollo.MutationFunction<AddTaskMutation, AddTask
  *   },
  * });
  */
-export function useAddTaskMutation(baseOptions?: Apollo.MutationHookOptions<AddTaskMutation, AddTaskMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddTaskMutation, AddTaskMutationVariables>(AddTaskDocument, options);
-      }
+export function useAddTaskMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddTaskMutation, AddTaskMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddTaskMutation, AddTaskMutationVariables>(AddTaskDocument, options);
+}
 export type AddTaskMutationHookResult = ReturnType<typeof useAddTaskMutation>;
 export type AddTaskMutationResult = Apollo.MutationResult<AddTaskMutation>;
 export type AddTaskMutationOptions = Apollo.BaseMutationOptions<AddTaskMutation, AddTaskMutationVariables>;
 export const RemoveTaskDocument = gql`
-    mutation removeTask($taskId: ID!) {
-  removeTask(id: $taskId) {
-    id
-    title
+  mutation removeTask($taskId: ID!) {
+    removeTask(id: $taskId) {
+      id
+      title
+    }
   }
-}
-    `;
+`;
 export type RemoveTaskMutationFn = Apollo.MutationFunction<RemoveTaskMutation, RemoveTaskMutationVariables>;
 
 /**
@@ -190,24 +180,26 @@ export type RemoveTaskMutationFn = Apollo.MutationFunction<RemoveTaskMutation, R
  *   },
  * });
  */
-export function useRemoveTaskMutation(baseOptions?: Apollo.MutationHookOptions<RemoveTaskMutation, RemoveTaskMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RemoveTaskMutation, RemoveTaskMutationVariables>(RemoveTaskDocument, options);
-      }
+export function useRemoveTaskMutation(
+  baseOptions?: Apollo.MutationHookOptions<RemoveTaskMutation, RemoveTaskMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveTaskMutation, RemoveTaskMutationVariables>(RemoveTaskDocument, options);
+}
 export type RemoveTaskMutationHookResult = ReturnType<typeof useRemoveTaskMutation>;
 export type RemoveTaskMutationResult = Apollo.MutationResult<RemoveTaskMutation>;
 export type RemoveTaskMutationOptions = Apollo.BaseMutationOptions<RemoveTaskMutation, RemoveTaskMutationVariables>;
 export const AddUserDocument = gql`
-    mutation addUser($user: AddUserInput!) {
-  addUser(user: $user) {
-    id
-    firstName
-    tasks {
+  mutation addUser($user: AddUserInput!) {
+    addUser(user: $user) {
       id
+      firstName
+      tasks {
+        id
+      }
     }
   }
-}
-    `;
+`;
 export type AddUserMutationFn = Apollo.MutationFunction<AddUserMutation, AddUserMutationVariables>;
 
 /**
@@ -227,22 +219,24 @@ export type AddUserMutationFn = Apollo.MutationFunction<AddUserMutation, AddUser
  *   },
  * });
  */
-export function useAddUserMutation(baseOptions?: Apollo.MutationHookOptions<AddUserMutation, AddUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddUserMutation, AddUserMutationVariables>(AddUserDocument, options);
-      }
+export function useAddUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddUserMutation, AddUserMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddUserMutation, AddUserMutationVariables>(AddUserDocument, options);
+}
 export type AddUserMutationHookResult = ReturnType<typeof useAddUserMutation>;
 export type AddUserMutationResult = Apollo.MutationResult<AddUserMutation>;
 export type AddUserMutationOptions = Apollo.BaseMutationOptions<AddUserMutation, AddUserMutationVariables>;
 export const UsersDocument = gql`
-    query users {
-  users {
-    id
-    firstName
-    lastName
+  query users {
+    users {
+      id
+      firstName
+      lastName
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useUsersQuery__
@@ -260,13 +254,13 @@ export const UsersDocument = gql`
  * });
  */
 export function useUsersQuery(baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+}
 export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+}
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
