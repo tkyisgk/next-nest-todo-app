@@ -28,7 +28,7 @@ type Query {
   user(id: ID!): UserModel!
   tasks: [TaskModel!]!
   taskByTaskIds(taskIds: [ID!]!): [TaskModel!]
-  taskByUserId(userId: ID!): TaskModel
+  taskByUserId(userId: ID!): [TaskModel!]
 }
 
 type Mutation {

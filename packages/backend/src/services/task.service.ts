@@ -30,8 +30,8 @@ export class TaskService {
     });
   }
 
-  async findByUserId(userId: number): Promise<TaskModel> {
-    return await this.taskRepository.findOne({
+  async findByUserId(userId: number): Promise<TaskModel[]> {
+    return await this.taskRepository.find({
       relations: ["assign"],
       where: {
         assign: userId,

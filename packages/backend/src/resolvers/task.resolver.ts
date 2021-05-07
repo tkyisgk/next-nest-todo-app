@@ -19,7 +19,7 @@ export class TaskResolver {
     return await this.taskService.findByTaskIds(ids);
   }
 
-  @Query(() => TaskModel, { nullable: true })
+  @Query(() => [TaskModel], { nullable: true })
   async taskByUserId(@Args("userId", { type: () => ID }) id: number) {
     return await this.taskService.findByUserId(id);
   }
