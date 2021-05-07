@@ -18,7 +18,7 @@ export const Button: React.FC<Props> = ({ children, type = "button", onClick }) 
 
 const button = css({
   display: "inline-block",
-  padding: "8px 14px",
+  padding: "14px 14px",
   width: "100%",
   color: "#fff",
   border: "none",

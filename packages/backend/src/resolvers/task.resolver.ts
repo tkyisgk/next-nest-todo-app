@@ -14,9 +14,14 @@ export class TaskResolver {
     return await this.taskService.findAll();
   }
 
-  @Query(() => TaskModel)
-  async task(@Args("id", { type: () => ID }) id: number) {
-    return await this.taskService.findOne(id);
+  @Query(() => [TaskModel], { nullable: true })
+  async taskByTaskIds(@Args("taskIds", { type: () => [ID] }) ids: number[]) {
+    return await this.taskService.findByTaskIds(ids);
+  }
+
+  @Query(() => TaskModel, { nullable: true })
+  async taskByUserId(@Args("userId", { type: () => ID }) id: number) {
+    return await this.taskService.findByUserId(id);
   }
 
   @Mutation(() => TaskModel)
@@ -25,7 +30,7 @@ export class TaskResolver {
   }
 
   @Mutation(() => TaskModel, { nullable: true })
-  async removeTask(@Args("id", { type: () => ID }) id: number) {
+  async removeTask(@Args("taskId", { type: () => ID }) id: number) {
     return await this.taskService.delete(id);
   }
 }

@@ -27,14 +27,15 @@ type Query {
   users: [UserModel!]!
   user(id: ID!): UserModel!
   tasks: [TaskModel!]!
-  task(id: ID!): TaskModel!
+  taskByTaskIds(taskIds: [ID!]!): [TaskModel!]
+  taskByUserId(userId: ID!): TaskModel
 }
 
 type Mutation {
   addUser(user: AddUserInput!): UserModel!
   removeUser(id: ID!): UserModel
   addTask(task: AddTaskInput!): TaskModel!
-  removeTask(id: ID!): TaskModel
+  removeTask(taskId: ID!): TaskModel
 }
 
 input AddUserInput {

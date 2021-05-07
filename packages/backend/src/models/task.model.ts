@@ -15,18 +15,18 @@ export class TaskModel {
   title: string;
 
   @Field()
-  @Column("date", { nullable: true })
+  @Column("datetime")
   deadline: Date;
 
-  @Field(() => UserModel, { defaultValue: {} })
+  @Field(() => UserModel, { nullable: false })
   @ManyToOne(() => UserModel, (user) => user.tasks)
   assign: UserModel;
 
   @Field()
   @CreateDateColumn()
-  createdAt: Date;
+  readonly createdAt: Date;
 
   @Field()
   @UpdateDateColumn()
-  updatedAt: Date;
+  readonly updatedAt: Date;
 }

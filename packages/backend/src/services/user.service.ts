@@ -14,6 +14,7 @@ export class UserService {
 
   async findAll(): Promise<UserModel[]> {
     return this.usersRepository.find({
+      relations: ["tasks"],
       order: {
         id: "DESC",
       },

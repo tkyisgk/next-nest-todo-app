@@ -16,16 +16,30 @@ export class TaskService {
   ) {}
 
   async findAll(): Promise<TaskModel[]> {
-    return this.taskRepository.find({
-      relations: ["user"],
+    return await this.taskRepository.find({
+      relations: ["assign"], // MEMO: modelで定義しているカラム名
       order: {
         id: "DESC",
       },
     });
   }
 
-  async findOne(id: number): Promise<TaskModel> {
-    return await this.taskRepository.findOne(id);
+  async findByTaskIds(taskIds: number[]): Promise<TaskModel[]> {
+    return await this.taskRepository.findByIds(taskIds, {
+      relations: ["assign"],
+    });
+  }
+
+  async findByUserId(userId: number): Promise<TaskModel> {
+    return await this.taskRepository.findOne({
+      relations: ["assign"],
+      where: {
+        assign: userId,
+      },
+      order: {
+        id: "DESC",
+      },
+    });
   }
 
   async add(obj: AddTaskInput): Promise<TaskModel> {
@@ -35,6 +49,6 @@ export class TaskService {
 
   async delete(id: number): Promise<TaskModel> {
     await this.taskRepository.delete(id);
-    return await this.findOne(id);
+    return await this.taskRepository.findOne(id);
   }
 }
