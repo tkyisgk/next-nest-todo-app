@@ -14,7 +14,7 @@ mutation addTask($task: AddTaskInput!) {
 }
 
 mutation removeTask($taskId: ID!) {
-  removeTask(id: $taskId) {
+  removeTask(taskId: $taskId) {
     id
     title
   }

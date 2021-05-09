@@ -4,43 +4,75 @@ import Head from "next/head";
 import { InferGetServerSidePropsType } from "next";
 
 import { client } from "@/graphql/client";
-import { Query, UserModel, UsersDocument, useUsersQuery } from "@/graphql/generated";
+import {
+  Query,
+  UsersDocument,
+  AllTasksDocument,
+  useUsersQuery,
+  useTaskByUserIdQuery,
+  useAllTasksQuery,
+} from "@/graphql/generated";
 import { css } from "@emotion/core";
 
 import { UserList } from "@/components/organisms/UserList";
 import { Modal } from "@/components/templates/Modal";
 import { AddUser } from "@/components/organisms/AddUser";
+import { AddTask } from "@/components/organisms/AddTask";
+import { TaskList } from "@/components/organisms/TaskList";
 import { Button } from "@/components/atoms/Button";
 
 export const getServerSideProps = async () => {
-  const { data } = await client.query<Query>({
-    query: UsersDocument,
+  const process = [
+    client.query<Query>({
+      query: UsersDocument,
+    }),
+    client.query<Query>({
+      query: AllTasksDocument,
+    }),
+  ];
+  return Promise.all(process).then(([userResult, taskResult]) => {
+    return {
+      props: {
+        initUsersData: userResult.data,
+        initTasksData: taskResult.data,
+      },
+    };
   });
-  return { props: { initialData: data } };
 };
 
-export default memo<InferGetServerSidePropsType<typeof getServerSideProps>>(({ initialData }) => {
-  const { data, refetch } = useUsersQuery();
-  const userData = data ? data.users : initialData.users;
+export default memo<InferGetServerSidePropsType<typeof getServerSideProps>>(({ initUsersData, initTasksData }) => {
+  const { data: userQuery, refetch: userRefetch } = useUsersQuery();
+  const { data: tasksByUserIdQuery, refetch: tasksRefetch } = useTaskByUserIdQuery({});
+  const { data: allTasksQuery, refetch: allTasksRefetch } = useAllTasksQuery();
+  const userData = userQuery ? userQuery.users : initUsersData.users;
+  const allTaskData = allTasksQuery ? allTasksQuery.tasks : initTasksData.tasks;
+  const taskData = tasksByUserIdQuery ? tasksByUserIdQuery.taskByUserId : allTaskData;
 
   const [isAddUserModal, setAddUserModal] = useState(false);
-  const [isAddTaskModal, setAAddTaskModal] = useState(false);
-  const [isActiveUserId, setActiveUserId] = useState(userData[0].id);
+  const [isAddTaskModal, setAddTaskModal] = useState(false);
+  const [activeUserId, setActiveUserId] = useState(userData[0].id);
+  const isModalOpen = isAddUserModal || isAddTaskModal;
 
   const getActiveUserName = () => {
-    const userObj = userData.find((user) => isActiveUserId === user.id);
+    const userObj = userData.find((user) => activeUserId === user.id);
 
-    if (userObj === undefined) {
-      throw new TypeError("データはありません。");
-    }
+    if (userObj === undefined) throw new TypeError("データはありません。");
 
     return userObj.lastName + userObj.firstName;
   };
 
   const handleAddUserClick = () => setAddUserModal(!isAddUserModal);
-  const handleModalClose = () => setAddUserModal(false);
-  const handleAddUser = () => refetch().then(() => setAddUserModal(!isAddUserModal));
-  const handleUserSelect = (userId: string) => setActiveUserId(userId);
+  const handleModalClose = () => {
+    if (isAddUserModal) setAddUserModal(false);
+    if (isAddTaskModal) setAddTaskModal(false);
+  };
+  const handleAddUser = () => userRefetch().then(() => setAddUserModal(!isAddUserModal));
+  const handleAddTask = () => tasksRefetch().then(() => setAddTaskModal(!isAddTaskModal));
+  const handleAddTaskClick = () => setAddTaskModal(true);
+  const handleUserSelect = async (userId: string) => {
+    setActiveUserId(userId);
+    await tasksRefetch({ userId });
+  };
 
   return (
     <div>
@@ -49,24 +81,21 @@ export default memo<InferGetServerSidePropsType<typeof getServerSideProps>>(({ i
       </Head>
       <div css={container}>
         <aside css={aside}>
-          <UserList userData={userData} onClick={handleUserSelect} />
+          <UserList activeUserId={activeUserId} userData={userData} onClick={handleUserSelect} />
           <Button onClick={handleAddUserClick}>ユーザー追加</Button>
         </aside>
         <main css={main}>
           <div>
             <div>{getActiveUserName()}</div>
-            <Button>タスク追加</Button>
+            <TaskList taskList={taskData}></TaskList>
+            <Button onClick={handleAddTaskClick}>タスク追加</Button>
           </div>
         </main>
       </div>
-      {isAddUserModal && (
+      {isModalOpen && (
         <Modal onClose={handleModalClose}>
-          <AddUser onAddUser={handleAddUser} />
-        </Modal>
-      )}
-      {isAddTaskModal && (
-        <Modal onClose={handleModalClose}>
-          <AddUser onAddUser={handleAddUser} />
+          {isAddUserModal && <AddUser onAddUser={handleAddUser} />}
+          {isAddTaskModal && <AddTask onAddTask={handleAddTask} />}
         </Modal>
       )}
     </div>

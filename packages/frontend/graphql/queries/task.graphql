@@ -2,5 +2,37 @@ query allTasks {
   tasks {
     id
     title
+    deadline
+    assign {
+      id
+      firstName
+      lastName
+		}
+  }
+}
+
+query taskByTaskIds($taskIds: [ID!]!) {
+  taskByTaskIds(taskIds: $taskIds) {
+    id
+    title
+    deadline
+    assign {
+      id
+      firstName
+      lastName
+		}
+  }
+}
+
+query taskByUserId($userId: ID!) {
+  taskByUserId(userId: $userId) {
+    id
+    title
+    deadline
+    assign {
+      id
+      firstName
+      lastName
+		}
   }
 }

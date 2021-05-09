@@ -1,23 +1,33 @@
 import React from "react";
 import { css } from "@emotion/core";
 
+import { UserModel } from "@/graphql/generated";
+
 import { UserBox } from "@/components/molecules/UserBox";
 
+type User = Pick<UserModel, "id" | "firstName" | "lastName">;
 type Props = {
-  userData: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  }[];
+  activeUserId: string;
+  userData: User[];
   onClick: (userId: string) => void;
 };
 
-export const UserList: React.FC<Props> = ({ userData, onClick }) => {
+export const UserList: React.FC<Props> = ({ activeUserId, userData, onClick }) => {
+  const handleBtnClick = (user: User) => {
+    if (user.id === activeUserId) return;
+
+    onClick(user.id);
+  };
+
   return (
     <ul css={list}>
       {userData.map((user, index) => (
         <li css={item} key={index}>
-          <button type="button" css={button} onClick={() => onClick(user.id)}>
+          <button
+            type="button"
+            css={[button, activeUserId === user.id && isActive]}
+            onClick={() => handleBtnClick(user)}
+          >
             <UserBox userData={user} />
           </button>
         </li>
@@ -31,17 +41,10 @@ const list = css({
 });
 const item = css({
   position: "relative",
+});
 
-  // '&::after': {
-  //   content: '',
-  //   position: 'absolute',
-  //   bottom: 0,
-  //   left: '50%',
-  //   transform: 'translate(-50%, -50%)',
-  //   width: '80%',
-  //   height: '1px',
-  //   backgroundColor: '#ccc'
-  // }
+const isActive = css({
+  opacity: 0.6,
 });
 
 const button = css({

@@ -1,13 +1,26 @@
 import React from "react";
+import { css } from "@emotion/core";
+
+import { TaskModel } from "@/graphql/generated";
+
+import { TaskBox } from "@/components/molecules/TaskBox";
 
 type Props = {
-  // taskList: Object[];
+  taskList: TaskModel[];
 };
 
-export const TaskList: React.FC<Props> = () => {
+export const TaskList: React.FC<Props> = ({ taskList }) => {
   return (
-    <>
-      <div></div>
-    </>
+    <ul css={list}>
+      {taskList.map((task, index) => (
+        <li key={index}>
+          <TaskBox taskData={task} />
+        </li>
+      ))}
+    </ul>
   );
 };
+
+const list = css({
+  border: "1px solid #ccc",
+});

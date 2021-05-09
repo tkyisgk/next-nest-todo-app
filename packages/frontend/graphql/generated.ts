@@ -47,22 +47,27 @@ export type MutationAddTaskArgs = {
 };
 
 export type MutationRemoveTaskArgs = {
-  id: Scalars["ID"];
+  taskId: Scalars["ID"];
 };
 
 export type Query = {
   users: Array<UserModel>;
   user: UserModel;
   tasks: Array<TaskModel>;
-  task: TaskModel;
+  taskByTaskIds?: Maybe<Array<TaskModel>>;
+  taskByUserId?: Maybe<TaskModel>;
 };
 
 export type QueryUserArgs = {
   id: Scalars["ID"];
 };
 
-export type QueryTaskArgs = {
-  id: Scalars["ID"];
+export type QueryTaskByTaskIdsArgs = {
+  taskIds: Array<Scalars["ID"]>;
+};
+
+export type QueryTaskByUserIdArgs = {
+  userId: Scalars["ID"];
 };
 
 export type TaskModel = {
@@ -103,6 +108,34 @@ export type AddUserMutationVariables = Exact<{
 
 export type AddUserMutation = {
   addUser: Pick<UserModel, "id" | "firstName"> & { tasks: Array<Pick<TaskModel, "id">> };
+};
+
+export type AllTasksQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AllTasksQuery = {
+  tasks: Array<
+    Pick<TaskModel, "id" | "title" | "deadline"> & { assign: Pick<UserModel, "id" | "firstName" | "lastName"> }
+  >;
+};
+
+export type TaskByTaskIdsQueryVariables = Exact<{
+  taskIds: Array<Scalars["ID"]> | Scalars["ID"];
+}>;
+
+export type TaskByTaskIdsQuery = {
+  taskByTaskIds?: Maybe<
+    Array<Pick<TaskModel, "id" | "title" | "deadline"> & { assign: Pick<UserModel, "id" | "firstName" | "lastName"> }>
+  >;
+};
+
+export type TaskByUserIdQueryVariables = Exact<{
+  userId: Scalars["ID"];
+}>;
+
+export type TaskByUserIdQuery = {
+  taskByUserId?: Maybe<
+    Pick<TaskModel, "id" | "title" | "deadline"> & { assign: Pick<UserModel, "id" | "firstName" | "lastName"> }
+  >;
 };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never }>;
@@ -155,7 +188,7 @@ export type AddTaskMutationResult = Apollo.MutationResult<AddTaskMutation>;
 export type AddTaskMutationOptions = Apollo.BaseMutationOptions<AddTaskMutation, AddTaskMutationVariables>;
 export const RemoveTaskDocument = gql`
   mutation removeTask($taskId: ID!) {
-    removeTask(id: $taskId) {
+    removeTask(taskId: $taskId) {
       id
       title
     }
@@ -228,6 +261,139 @@ export function useAddUserMutation(
 export type AddUserMutationHookResult = ReturnType<typeof useAddUserMutation>;
 export type AddUserMutationResult = Apollo.MutationResult<AddUserMutation>;
 export type AddUserMutationOptions = Apollo.BaseMutationOptions<AddUserMutation, AddUserMutationVariables>;
+export const AllTasksDocument = gql`
+  query allTasks {
+    tasks {
+      id
+      title
+      deadline
+      assign {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+`;
+
+/**
+ * __useAllTasksQuery__
+ *
+ * To run a query within a React component, call `useAllTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllTasksQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllTasksQuery(baseOptions?: Apollo.QueryHookOptions<AllTasksQuery, AllTasksQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<AllTasksQuery, AllTasksQueryVariables>(AllTasksDocument, options);
+}
+export function useAllTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTasksQuery, AllTasksQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<AllTasksQuery, AllTasksQueryVariables>(AllTasksDocument, options);
+}
+export type AllTasksQueryHookResult = ReturnType<typeof useAllTasksQuery>;
+export type AllTasksLazyQueryHookResult = ReturnType<typeof useAllTasksLazyQuery>;
+export type AllTasksQueryResult = Apollo.QueryResult<AllTasksQuery, AllTasksQueryVariables>;
+export const TaskByTaskIdsDocument = gql`
+  query taskByTaskIds($taskIds: [ID!]!) {
+    taskByTaskIds(taskIds: $taskIds) {
+      id
+      title
+      deadline
+      assign {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+`;
+
+/**
+ * __useTaskByTaskIdsQuery__
+ *
+ * To run a query within a React component, call `useTaskByTaskIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTaskByTaskIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTaskByTaskIdsQuery({
+ *   variables: {
+ *      taskIds: // value for 'taskIds'
+ *   },
+ * });
+ */
+export function useTaskByTaskIdsQuery(
+  baseOptions: Apollo.QueryHookOptions<TaskByTaskIdsQuery, TaskByTaskIdsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<TaskByTaskIdsQuery, TaskByTaskIdsQueryVariables>(TaskByTaskIdsDocument, options);
+}
+export function useTaskByTaskIdsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<TaskByTaskIdsQuery, TaskByTaskIdsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<TaskByTaskIdsQuery, TaskByTaskIdsQueryVariables>(TaskByTaskIdsDocument, options);
+}
+export type TaskByTaskIdsQueryHookResult = ReturnType<typeof useTaskByTaskIdsQuery>;
+export type TaskByTaskIdsLazyQueryHookResult = ReturnType<typeof useTaskByTaskIdsLazyQuery>;
+export type TaskByTaskIdsQueryResult = Apollo.QueryResult<TaskByTaskIdsQuery, TaskByTaskIdsQueryVariables>;
+export const TaskByUserIdDocument = gql`
+  query taskByUserId($userId: ID!) {
+    taskByUserId(userId: $userId) {
+      id
+      title
+      deadline
+      assign {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+`;
+
+/**
+ * __useTaskByUserIdQuery__
+ *
+ * To run a query within a React component, call `useTaskByUserIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTaskByUserIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTaskByUserIdQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useTaskByUserIdQuery(
+  baseOptions: Apollo.QueryHookOptions<TaskByUserIdQuery, TaskByUserIdQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<TaskByUserIdQuery, TaskByUserIdQueryVariables>(TaskByUserIdDocument, options);
+}
+export function useTaskByUserIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<TaskByUserIdQuery, TaskByUserIdQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<TaskByUserIdQuery, TaskByUserIdQueryVariables>(TaskByUserIdDocument, options);
+}
+export type TaskByUserIdQueryHookResult = ReturnType<typeof useTaskByUserIdQuery>;
+export type TaskByUserIdLazyQueryHookResult = ReturnType<typeof useTaskByUserIdLazyQuery>;
+export type TaskByUserIdQueryResult = Apollo.QueryResult<TaskByUserIdQuery, TaskByUserIdQueryVariables>;
 export const UsersDocument = gql`
   query users {
     users {
